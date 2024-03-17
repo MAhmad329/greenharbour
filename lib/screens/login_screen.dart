@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Consumer<PasswordVisibilityProvider>(
                     builder: (context, provider, child) {
-                      return TextFormField(
+                      return TextField(
                         style: TextStyle(
                           fontSize: 14.sp,
                         ),
