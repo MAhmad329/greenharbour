@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-const primaryGreen = Color(0xFF146533);
+const primaryGreen = Color(0xFF1F4343);
 const colorBlack = Color(0xFF01042D);
 const colorGrey = Color(0xFF8E8E93);
 const colorLightGrey = Color(0xFFCCCDD5);
 
 InputDecoration kTextFieldDecoration = InputDecoration(
   hintText: 'hint',
-  hintStyle: TextStyle(fontSize: 14.sp, color: colorLightGrey),
+  hintStyle: const TextStyle(fontSize: 14, color: colorLightGrey),
   contentPadding: EdgeInsets.symmetric(vertical: 20.0.h, horizontal: 16.0.w),
   border: OutlineInputBorder(
     borderRadius: BorderRadius.all(

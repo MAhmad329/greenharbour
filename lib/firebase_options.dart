@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,6 +43,15 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAzL6M0IfZYV2T_WHYhMxN_5vBuwTt8Irw',
+    appId: '1:138166980230:web:25325f69c3691fb1268b07',
+    messagingSenderId: '138166980230',
+    projectId: 'greenharbour-ec1f1',
+    authDomain: 'greenharbour-ec1f1.firebaseapp.com',
+    storageBucket: 'greenharbour-ec1f1.appspot.com',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAKQN9ZLW7uddK0yNYDn9CQY5k4nYsiHSM',
     appId: '1:138166980230:android:7b4566374d2737b5268b07',
@@ -64,5 +67,14 @@ class DefaultFirebaseOptions {
     projectId: 'greenharbour-ec1f1',
     storageBucket: 'greenharbour-ec1f1.appspot.com',
     iosBundleId: 'com.example.greenHarbour',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAkClaQFfJL-qfg9QNGVq8QcnnKQDBKSd8',
+    appId: '1:138166980230:ios:e129bec20a97a4b5268b07',
+    messagingSenderId: '138166980230',
+    projectId: 'greenharbour-ec1f1',
+    storageBucket: 'greenharbour-ec1f1.appspot.com',
+    iosBundleId: 'com.example.greenHarbour.RunnerTests',
   );
 }
