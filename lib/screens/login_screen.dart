@@ -92,8 +92,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             prefixIcon: Padding(
                               padding: EdgeInsets.only(left: 8.0.w),
                               child: SvgPicture.asset(
-                                height: 10.h,
-                                width: 10.w,
                                 'assets/icons/lock.svg',
                               ),
                             ),
