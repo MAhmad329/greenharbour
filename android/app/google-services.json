@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "138166980230",
+    "project_id": "greenharbour-ec1f1",
+    "storage_bucket": "greenharbour-ec1f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138166980230:android:7b4566374d2737b5268b07",
+        "android_client_info": {
+          "package_name": "com.example.green_harbour"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKQN9ZLW7uddK0yNYDn9CQY5k4nYsiHSM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
