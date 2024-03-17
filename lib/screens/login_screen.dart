@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_harbour/constants.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/password_visibility_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -32,10 +37,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                           fontSize: 28.sp, fontWeight: FontWeight.bold),
                     ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
                     Text(
                       'Use your credentials below and login to your account',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 14.sp, fontWeight: FontWeight.w400),
+                          color: colorGrey,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
@@ -46,43 +57,70 @@ class _LoginScreenState extends State<LoginScreen> {
               Column(
                 children: [
                   TextField(
-                    style: TextStyle(fontSize: 14.sp),
+                    style:
+                        TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
                     controller: emailController,
                     cursorColor: primaryGreen,
-                    decoration: InputDecoration(
-                      hintText: 'hint text',
-                      filled: true,
-                      fillColor: Color.fromRGBO(152, 126, 255, 0.10),
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: 14.0.h, horizontal: 16.0.w),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0.r)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.transparent, width: 1.0.w),
-                        borderRadius: BorderRadius.all(Radius.circular(10.0.r)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: primaryGreen, width: 2.0.w),
-                        borderRadius: BorderRadius.all(Radius.circular(10.0.r)),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.r)),
-                        borderSide: BorderSide(
-                          width: 2,
-                          color: Colors.red,
-                        ),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.r)),
-                        borderSide: BorderSide(
-                          width: 2,
-                          color: Colors.red,
+                    decoration: kTextFieldDecoration.copyWith(
+                      hintText: 'Enter your email',
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 8.0.w),
+                        child: Transform.scale(
+                          alignment: Alignment.center,
+                          scale: 0.5
+                              .r, // Adjust the scale factor to reduce the size
+                          child: SvgPicture.asset(
+                            'assets/icons/email.svg',
+                          ),
                         ),
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  Consumer<PasswordVisibilityProvider>(
+                    builder: (context, provider, child) {
+                      return TextFormField(
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                        ),
+                        controller: passwordController,
+                        cursorColor: primaryGreen,
+                        obscureText: provider.isObscure,
+                        decoration: kTextFieldDecoration.copyWith(
+                          hintText: 'Password',
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.only(left: 8.0.w),
+                            child: Transform.scale(
+                              alignment: Alignment.center,
+                              scale: 0.5
+                                  .r, // Adjust the scale factor to reduce the size
+                              child: SvgPicture.asset(
+                                'assets/icons/lock.svg',
+                              ),
+                            ),
+                          ),
+                          suffixIcon: Padding(
+                            padding: EdgeInsets.only(right: 8.0.w),
+                            child: IconButton(
+                              splashColor: Colors.transparent,
+                              color: Colors.grey.shade500,
+                              icon: Icon(
+                                color: primaryGreen,
+                                size: 20.r,
+                                provider.isObscure
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                              onPressed: () {
+                                provider.toggleVisibility();
+                              },
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               )

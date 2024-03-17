@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:green_harbour/providers/auth_provider.dart';
+import 'package:green_harbour/providers/password_visibility_provider.dart';
 import 'package:green_harbour/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,9 @@ Future main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
       create: (context) => AuthServiceProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => PasswordVisibilityProvider(),
     ),
   ], child: const MyApp()));
 }
