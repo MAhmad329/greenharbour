@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -14,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _navigateToHome() async {
-    await Future.delayed(const Duration(seconds: 3), () {});
+    await Future.delayed(const Duration(seconds: 50), () {});
     if (!mounted) {
       return;
     }
@@ -24,14 +23,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF73BC78),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Add your logo or splash screen image
-            Image.asset('assets/Logo.svg'),
-            SizedBox(height: 20.h),
-            const CircularProgressIndicator(), // Optional: Add a loading indicator
+            Image.asset(
+              'assets/Logo.png',
+            ),
           ],
         ),
       ),

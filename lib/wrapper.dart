@@ -20,7 +20,7 @@ class Wrapper extends StatelessWidget {
           return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(
-                color: primaryColor,
+                color: primaryGreen,
               ),
             ),
           );

@@ -2,8 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:green_harbour/screens/splash_screen.dart';
-import 'package:green_harbour/wrapper.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:green_harbour/providers/auth_provider.dart';
+import 'package:green_harbour/screens/login_screen.dart';
+import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 
@@ -13,7 +15,11 @@ Future main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(
+      create: (context) => AuthServiceProvider(),
+    ),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,16 +28,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(430, 932),
+      designSize: const Size(393, 852),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
+          theme: ThemeData(
+            textTheme: GoogleFonts.interTextTheme(),
+          ),
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
           routes: {
-            '/': (context) => SplashScreen(),
-            'wrapper': (context) => const Wrapper(),
+            '/': (context) => LoginScreen(),
           },
         );
       },
