@@ -210,9 +210,20 @@ class _SignupScreenState extends State<SignupScreen> {
                       if (passwordController.text !=
                           confirmPasswordController.text) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Center(
-                                    child: Text('Passwords do not match'))));
+                          const SnackBar(
+                            content: Text('Passwords do not match'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      } else if (nameController.text.isEmpty ||
+                          emailController.text.isEmpty ||
+                          passwordController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please fill in all the fields!'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
                       } else {
                         signup();
                       }

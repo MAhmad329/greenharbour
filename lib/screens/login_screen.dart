@@ -26,7 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
           .signInWithEmailAndPassword(
               emailController.text, passwordController.text);
       if (!mounted) return;
-
       if (user != null) {
         Navigator.pushReplacementNamed(context, 'home_screen');
       } else {
