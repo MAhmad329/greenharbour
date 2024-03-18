@@ -5,7 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:green_harbour/providers/auth_provider.dart';
 import 'package:green_harbour/providers/password_visibility_provider.dart';
+import 'package:green_harbour/screens/home_screen.dart';
 import 'package:green_harbour/screens/login_screen.dart';
+import 'package:green_harbour/wrapper.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
@@ -43,7 +45,9 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
           routes: {
-            '/': (context) => LoginScreen(),
+            '/': (context) => Wrapper(),
+            'login_screen': (context) => LoginScreen(),
+            'home_screen': (context) => HomeScreen(),
           },
         );
       },

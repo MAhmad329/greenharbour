@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_harbour/constants.dart';
+import 'package:green_harbour/providers/auth_provider.dart';
 import 'package:green_harbour/screens/widgets/button.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,34 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
 
   TextEditingController passwordController = TextEditingController();
+
+  Future<void> login() async {
+    try {
+      var user = await Provider.of<AuthServiceProvider>(context, listen: false)
+          .signInWithEmailAndPassword(
+              emailController.text, passwordController.text);
+      if (!mounted) return;
+
+      if (user != null) {
+        Navigator.pushReplacementNamed(context, 'home_screen');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Login failed, please check your credentials"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to sign in: ${e.toString()}"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +166,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 32.h,
                 ),
                 MyButton(
+                    onTap: () {
+                      login();
+                    },
                     buttonText: 'Log into your account',
                     buttonColor: primaryGreen,
                     textColor: Colors.white,
