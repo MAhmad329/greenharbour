@@ -1,47 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:green_harbour/constants.dart';
-import 'package:green_harbour/providers/auth_provider.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:green_harbour/screens/widgets/button.dart';
 import 'package:provider/provider.dart';
 
+import '../constants.dart';
+import '../providers/auth_provider.dart';
 import '../providers/password_visibility_provider.dart';
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
 
-  Future<void> login() async {
+  Future<void> signup() async {
     try {
       var user = await Provider.of<AuthServiceProvider>(context, listen: false)
-          .signInWithEmailAndPassword(
-              emailController.text, passwordController.text);
+          .createUserWithEmailAndPassword(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+        nameController.text.trim(),
+      );
       if (!mounted) return;
-
       if (user != null) {
-        Navigator.pushReplacementNamed(context, 'home_screen');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Login failed, please check your credentials"),
-            backgroundColor: Colors.red,
-          ),
-        );
+        Navigator.pushReplacementNamed(context, 'login_screen');
       }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Failed to sign in: ${e.toString()}"),
+          content: Text("Failed to sign up: ${e.toString()}"),
           backgroundColor: Colors.red,
         ),
       );
@@ -65,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     children: [
                       const Text(
-                        'Welcome Back!',
+                        'Welcome',
                         style: TextStyle(
                             fontSize: 28, fontWeight: FontWeight.bold),
                       ),
@@ -73,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 10.h,
                       ),
                       const Text(
-                        'Use your credentials below and login to your account',
+                        'Create your new account',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: colorGrey,
@@ -84,17 +80,35 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 90.h,
+                  height: 44.h,
                 ),
                 Column(
                   children: [
                     TextField(
                       style: const TextStyle(
                           fontSize: 14, fontWeight: FontWeight.w500),
+                      controller: nameController,
+                      cursorColor: primaryGreen,
+                      decoration: kTextFieldDecoration.copyWith(
+                        hintText: 'Enter Your Full Name',
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.only(left: 8.0.w),
+                          child: SvgPicture.asset(
+                            'assets/icons/user.svg',
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15.h,
+                    ),
+                    TextField(
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w500),
                       controller: emailController,
                       cursorColor: primaryGreen,
                       decoration: kTextFieldDecoration.copyWith(
-                        hintText: 'Enter your Email',
+                        hintText: 'Enter your email',
                         prefixIcon: Padding(
                           padding: EdgeInsets.only(left: 8.0.w),
                           child: SvgPicture.asset(
@@ -145,43 +159,77 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       },
                     ),
+                    SizedBox(
+                      height: 15.h,
+                    ),
+                    Consumer<PasswordVisibilityProvider>(
+                      builder: (context, provider, child) {
+                        return TextField(
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
+                          controller: confirmPasswordController,
+                          cursorColor: primaryGreen,
+                          obscureText: provider.isObscure,
+                          decoration: kTextFieldDecoration.copyWith(
+                            hintText: 'Confirm Password',
+                            prefixIcon: Padding(
+                              padding: EdgeInsets.only(left: 8.0.w),
+                              child: SvgPicture.asset(
+                                'assets/icons/lock.svg',
+                              ),
+                            ),
+                            suffixIcon: Padding(
+                              padding: EdgeInsets.only(right: 8.0.w),
+                              child: IconButton(
+                                splashColor: Colors.transparent,
+                                color: Colors.grey.shade500,
+                                icon: Icon(
+                                  color: primaryGreen,
+                                  size: 24.r,
+                                  provider.isObscure
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                                onPressed: () {
+                                  provider.toggleVisibility();
+                                },
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
                 SizedBox(
-                  height: 26.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      child: const Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w400),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 32.h,
+                  height: 45.h,
                 ),
                 MyButton(
                     onTap: () {
-                      login();
+                      if (passwordController.text !=
+                          confirmPasswordController.text) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Center(
+                                    child: Text('Passwords do not match'))));
+                      } else {
+                        signup();
+                      }
                     },
-                    buttonText: 'Log into your account',
+                    buttonText: 'Create Account',
                     buttonColor: primaryGreen,
                     textColor: Colors.white,
                     buttonWidth: 245,
                     buttonHeight: 50.h),
                 SizedBox(
-                  height: 150.h,
+                  height: 90.h,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      'Don\'t have an account?',
+                      'Already have an account?',
                       style:
                           TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                     ),
@@ -190,11 +238,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacementNamed(
-                            context, 'signup_screen');
+                        Navigator.pushReplacementNamed(context, 'login_screen');
                       },
                       child: const Text(
-                        'Sign up here',
+                        'Login',
                         style: TextStyle(
                             fontSize: 13,
                             color: primaryGreen,
@@ -218,6 +265,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    confirmPasswordController.dispose();
+    nameController.dispose();
     super.dispose();
   }
 }

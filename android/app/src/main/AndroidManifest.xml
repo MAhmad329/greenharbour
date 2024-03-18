@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="odyssey_app"
+        android:label="greenharbour"
         android:name="${applicationName}"
         android:icon="@mipmap/logo">
         <activity

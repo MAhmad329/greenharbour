@@ -24,7 +24,8 @@ class AuthServiceProvider with ChangeNotifier {
     var userData = snapshot.data();
     String name = userData?['name'] ?? '';
 
-    _currentUser = User(firebaseUser.uid, firebaseUser.email, name);
+    _currentUser =
+        User(firebaseUser.uid, firebaseUser.email, firebaseUser.displayName);
 
     return _currentUser;
   }
@@ -32,6 +33,7 @@ class AuthServiceProvider with ChangeNotifier {
   Future<User?> createUserWithEmailAndPassword(
     String email,
     String password,
+    String name,
   ) async {
     try {
       final credential = await _firebaseAuth.createUserWithEmailAndPassword(
@@ -41,7 +43,7 @@ class AuthServiceProvider with ChangeNotifier {
       if (firebaseUser != null) {
         await _firestore.collection('users').doc(firebaseUser.uid).set({
           'email': firebaseUser.email,
-          'name': firebaseUser.displayName,
+          'name': name,
         });
 
         return _fetchUserData(firebaseUser);

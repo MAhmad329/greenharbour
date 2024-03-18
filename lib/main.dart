@@ -7,6 +7,7 @@ import 'package:green_harbour/providers/auth_provider.dart';
 import 'package:green_harbour/providers/password_visibility_provider.dart';
 import 'package:green_harbour/screens/home_screen.dart';
 import 'package:green_harbour/screens/login_screen.dart';
+import 'package:green_harbour/screens/signup_screen.dart';
 import 'package:green_harbour/wrapper.dart';
 import 'package:provider/provider.dart';
 
@@ -45,9 +46,10 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
           routes: {
-            '/': (context) => Wrapper(),
+            '/': (context) => const Wrapper(),
             'login_screen': (context) => LoginScreen(),
-            'home_screen': (context) => HomeScreen(),
+            'home_screen': (context) => const HomeScreen(),
+            'signup_screen': (context) => const SignupScreen(),
           },
         );
       },
