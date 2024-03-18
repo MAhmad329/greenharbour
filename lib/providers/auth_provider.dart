@@ -24,8 +24,7 @@ class AuthServiceProvider with ChangeNotifier {
     var userData = snapshot.data();
     String name = userData?['name'] ?? '';
 
-    _currentUser =
-        User(firebaseUser.uid, firebaseUser.email, firebaseUser.displayName);
+    _currentUser = User(firebaseUser.uid, firebaseUser.email, name, '');
 
     return _currentUser;
   }
