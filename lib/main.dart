@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:green_harbour/constants.dart';
 import 'package:green_harbour/providers/auth_provider.dart';
 import 'package:green_harbour/providers/password_visibility_provider.dart';
 import 'package:green_harbour/screens/home_screen.dart';
@@ -41,14 +42,15 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           theme: ThemeData(
-            textTheme: GoogleFonts.interTextTheme(),
-          ),
+              textTheme: GoogleFonts.interTextTheme(),
+              appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
+              scaffoldBackgroundColor: Colors.white),
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
           routes: {
             '/': (context) => const Wrapper(),
             'login_screen': (context) => LoginScreen(),
-            'home_screen': (context) => const HomeScreen(),
+            'home_screen': (context) => HomeScreen(),
             'signup_screen': (context) => const SignupScreen(),
           },
         );
