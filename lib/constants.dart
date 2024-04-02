@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 const primaryGreen = Color(0xFF1F4343);
@@ -24,3 +25,14 @@ InputDecoration kTextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(10.0.r)),
   ),
 );
+
+void easyLoading() {
+  EasyLoading.show(
+    indicator: const CircularProgressIndicator(
+      backgroundColor: primaryGreen,
+      color: Colors.teal,
+    ),
+    maskType: EasyLoadingMaskType.none,
+    dismissOnTap: true,
+  );
+}
