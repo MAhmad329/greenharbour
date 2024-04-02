@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:green_harbour/constants.dart';
+
 import 'package:green_harbour/providers/auth_provider.dart';
 import 'package:green_harbour/providers/houses_provider.dart';
 import 'package:green_harbour/providers/password_visibility_provider.dart';
@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
           initialRoute: '/',
           routes: {
             '/': (context) => const Wrapper(),
-            'login_screen': (context) => LoginScreen(),
+            'login_screen': (context) => const LoginScreen(),
             'home_screen': (context) => HomeScreen(),
             'signup_screen': (context) => const SignupScreen(),
           },

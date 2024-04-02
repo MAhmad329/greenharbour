@@ -6,7 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:green_harbour/constants.dart';
 import 'package:green_harbour/models/house_model.dart';
-import 'package:green_harbour/screens/give_review_screen.dart';
+import 'package:green_harbour/providers/houses_provider.dart';
+
 import 'package:green_harbour/screens/search_screen.dart';
 
 import 'package:green_harbour/screens/widgets/home_screen_widgets.dart';
@@ -14,70 +15,97 @@ import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   var profilePic = 'asds';
 
   @override
+  void initState() {
+    super.initState();
+    // Provider.of<HouseProvider>(context).getMyReviewedHouses();
+    var notifier = Provider.of<HouseProvider>(context, listen: false);
+
+    // Call your function here
+    notifier.getMyReviewedHouses();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: Column(
-              children: [
-                homeHeader(
-                    imageUrl: '',
-                    username: Provider.of<AuthServiceProvider>(context)
-                        .currentUser!
-                        .name!,
-                    onTap: () {}),
-                const SizedBox(
-                  height: 15,
-                ),
-                searchBar(onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SearchScreen()),
-                  );
-                }),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Row(
+    return Scaffold(body: Consumer<HouseProvider>(
+      builder: (context, houseProvider, child) {
+        return SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Column(
                   children: [
-                    Text(
-                      'History',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    homeHeader(
+                        imageUrl: '',
+                        username: Provider.of<AuthServiceProvider>(context)
+                            .currentUser!
+                            .name!,
+                        onTap: () {}),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    searchBar(onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SearchScreen()),
+                      );
+                    }),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Row(
+                      children: [
+                        Text(
+                          'History',
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              Expanded(
+                child: houseProvider.myReviewedHouses.isEmpty
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.builder(
+                        itemCount: houseProvider.myReviewedHouses.length,
+                        itemBuilder: (context, index) {
+                          return HouseCard(
+                              house: houseProvider.myReviewedHouses[index],
+                              onTap: () {});
+                        },
+                      ),
+              )
+            ],
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return Text('Hello');
-              },
-            ),
-          )
-        ],
-      ),
+        );
+      },
     ));
   }
 }
 
 class HouseCard extends StatelessWidget {
   final House house;
+  final VoidCallback onTap;
   const HouseCard({
     super.key,
     required this.house,
+    required this.onTap,
   });
 
   @override
@@ -116,7 +144,7 @@ class HouseCard extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        'House ${house.houseNumber}',
+                        'House: ${house.houseNumber}',
                         style: const TextStyle(
                             color: colorBlack,
                             fontSize: 18,
@@ -137,14 +165,7 @@ class HouseCard extends StatelessWidget {
                 children: [
                   house.review == ''
                       ? InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const GiveReview(),
-                              ),
-                            );
-                          },
+                          onTap: onTap,
                           child: const Row(
                             children: [
                               Text(
@@ -165,20 +186,22 @@ class HouseCard extends StatelessWidget {
                             ],
                           ),
                         )
-                      : const Column(
+                      : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Reviewed:',
+                            const Text(
+                              'Review:',
                               style: TextStyle(
                                   color: colorBlack,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              'Not Eligible',
+                              house.review,
                               style: TextStyle(
-                                  color: Colors.red,
+                                  color: house.review == 'Not Eligible'
+                                      ? Colors.red
+                                      : Colors.green,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500),
                             ),

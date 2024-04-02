@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:green_harbour/constants.dart';
 import 'package:green_harbour/providers/houses_provider.dart';
+import 'package:green_harbour/screens/give_review_screen.dart';
 import 'package:green_harbour/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -71,11 +72,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      // houseProvider.fetchHouses(
-                      //     postalcode: searchController.text.trim(),
-                      //     context: context);
+                      houseProvider.searchHouses(
+                          postalCode: searchController.text.trim(),
+                          context: context);
 
-                      houseProvider.addDummyDataToFirestore();
+                      //   houseProvider.getMyReviewedHouses();
                     },
                     child: Container(
                       width: 55,
@@ -99,7 +100,19 @@ class _SearchScreenState extends State<SearchScreen> {
           body: ListView.builder(
             itemCount: houseProvider.houses.length,
             itemBuilder: (context, index) {
-              return HouseCard(house: houseProvider.houses[index]);
+              return HouseCard(
+                house: houseProvider.houses[index],
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GiveReview(
+                        house: houseProvider.houses[index],
+                      ),
+                    ),
+                  );
+                },
+              );
             },
           ),
         );

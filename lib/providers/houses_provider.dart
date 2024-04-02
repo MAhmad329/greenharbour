@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:green_harbour/constants.dart';
 import 'package:green_harbour/models/house_model.dart';
@@ -12,9 +13,24 @@ import 'package:flutter/material.dart';
 
 class HouseProvider with ChangeNotifier {
   List<House> houses = [];
+  List<House> myReviewedHouses = [];
+
+  Future<void> searchHouses(
+      {required String postalCode, required BuildContext context}) async {
+    try {
+      bool isDataFoundInFirebase =
+          await getHousesFromFirebase(postalCode: postalCode);
+
+      if (isDataFoundInFirebase == false) {
+        fetchHouses(postalcode: postalCode, context: context);
+      }
+    } catch (error) {
+      log('searchHouses Catched Error: $error');
+    }
+  }
 
   Future<void> fetchEnergyRatings({required String postalCode}) async {
-    print('Fetching Energy Ratings');
+    log('Fetching Energy Ratings');
     final url = Uri.parse(
         'https://api.data.street.co.uk/street-data-api/v2/properties/areas/postcodes?fields[property]=energy_performance&postcode=$postalCode');
     final headers = {
@@ -25,7 +41,7 @@ class HouseProvider with ChangeNotifier {
       final response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
         final data = await json.decode(response.body);
-        log(data['data'].length.toString());
+        //  log(data['data'].length.toString());
 
         for (var i = 0; i < data['data'].length; i++) {
           //      log(data['data'][0].toString());
@@ -33,8 +49,8 @@ class HouseProvider with ChangeNotifier {
 
           for (var j = 0; j < houses.length; j++) {
             String houseID = data['data'][i]['id'].toString();
-            print('Energy House ID: ${houseID.toString()}');
-            print(houses[j].houseId);
+            //  print('Energy House ID: ${houseID.toString()}');
+            //  print(houses[j].houseId);
             if (houseID == houses[j].houseId) {
               if (data['data'][i]['attributes']['energy_performance']
                       .toString() !=
@@ -47,7 +63,7 @@ class HouseProvider with ChangeNotifier {
             }
           }
 
-          log(data['data'][i].toString());
+          // log(data['data'][i].toString());
           // log(
           //   data['data'][i]['attributes']['energy_performance'].toString(),
           // );
@@ -87,8 +103,8 @@ class HouseProvider with ChangeNotifier {
         //    print('-----------------------');
         houses.clear();
         for (var i = 0; i < data['data'].length; i++) {
-          log(data['data'][i]['attributes']['address']['simplified_format']
-              .toString());
+          // log(data['data'][i]['attributes']['address']['simplified_format']
+          //     .toString());
           // log(data['data'][i]['id'].toString());
           var houseId = data['data'][i]['id'].toString();
           var house =
@@ -101,12 +117,14 @@ class HouseProvider with ChangeNotifier {
               street: house['street'],
               locality: house['locality'].toString(),
               town: house['town'],
-              postCode: house['postcode'],
+              postCode: house['postcode'].replaceAll(' ', ''),
             ),
           );
         }
 
         await fetchEnergyRatings(postalCode: postalcode);
+        log('Got Data from API');
+        addHousesToFirestore();
         EasyLoading.dismiss();
       } else {
         log('Request failed with status: ${response.statusCode}');
@@ -133,29 +151,213 @@ class HouseProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addDummyDataToFirestore() async {
+  Future<void> addHousesToFirestore() async {
     try {
-      // Access Firestore instance
       FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-      // Add multiple documents at once using a batch
       WriteBatch batch = firestore.batch();
 
-      // Loop through each data and add it to the batch
-      for (var data in houses) {
-        // Generate a new document reference with an auto-generated ID
-        DocumentReference docRef = firestore.collection('houses').doc();
+      for (int index = 0; index < houses.length; index++) {
+        var house = houses[index];
+        var houseRef = firestore.collection('houses');
 
-        // Add data to the batch
-        batch.set(docRef, data.toJson());
+        // Add a document to the "postalCode" subcollection with the name of the postal code
+        DocumentReference postalCodeDocRef = houseRef.doc(house.houseId);
+        batch.set(postalCodeDocRef, house.toJson());
       }
 
-      // Commit the batch
       await batch.commit();
 
-      print('Dummy data added successfully!');
+      log('Houses added successfully!');
     } catch (e) {
-      print('Error adding dummy data: $e');
+      log('Error adding Houses to Firebase: $e');
+    }
+  }
+
+  Future<bool> getHousesFromFirebase({required String postalCode}) async {
+    bool isDataFound = false;
+    easyLoading();
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      QuerySnapshot querySnapshot = await firestore
+          .collection('houses')
+          .where('postCode', isEqualTo: postalCode)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        log('No houses found for the postalcode: $postalCode in Firebase');
+      } else {
+        houses.clear();
+        houses.addAll(
+          querySnapshot.docs
+              .map(
+                (doc) => House.fromJson(doc.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
+        log('Got Data From Firebase');
+        isDataFound = true;
+        EasyLoading.dismiss();
+        notifyListeners();
+      }
+    } catch (e) {
+      log('Error retrieving houses: $e');
+      EasyLoading.dismiss();
+    }
+    EasyLoading.dismiss();
+    return isDataFound;
+  }
+
+  Future<void> updateHouseReview(
+    House house,
+    String review,
+  ) async {
+    easyLoading();
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      var reviewerId = FirebaseAuth.instance.currentUser!.uid;
+
+      // Reference the house document within the specified postal code
+      DocumentReference houseDocRef =
+          firestore.collection('houses').doc(house.houseId);
+
+      // Update the fields
+      await houseDocRef.update({
+        'review': review,
+        'reviewerId': reviewerId,
+      });
+      EasyLoading.dismiss();
+
+      log('House review updated successfully!');
+    } catch (e) {
+      EasyLoading.dismiss();
+      log('Error updating house review: $e');
+    }
+  }
+
+  Future<void> getMyReviewedHouses() async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      String userId = FirebaseAuth.instance.currentUser!.uid;
+
+      QuerySnapshot querySnapshot = await firestore
+          .collection('houses')
+          .where('reviewerId', isEqualTo: userId)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        log('No houses found');
+      } else {
+        myReviewedHouses.clear();
+        myReviewedHouses.addAll(
+          querySnapshot.docs
+              .map(
+                (doc) => House.fromJson(doc.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
+        log('Fetched myReviewed Houses Successfully');
+
+        EasyLoading.dismiss();
+        notifyListeners();
+      }
+    } catch (e) {
+      log('Error retrieving reviewed houses: $e');
+    }
+  }
+}
+
+class Backup {
+//  Future<void> addHousesToFirestore() async {
+//     try {
+//       FirebaseFirestore firestore = FirebaseFirestore.instance;
+//       WriteBatch batch = firestore.batch();
+
+//       for (int index = 0; index < houses.length; index++) {
+//         var house = houses[index];
+//         DocumentReference postalCodeRef =
+//             firestore.collection('postalcodes').doc(house.postCode);
+
+//         CollectionReference houseCollectionRef =
+//             postalCodeRef.collection(house.postCode);
+
+//         // Add a document to the "postalCode" subcollection with the name of the postal code
+//         DocumentReference postalCodeDocRef =
+//             houseCollectionRef.doc(house.houseId);
+//         batch.set(postalCodeDocRef, house.toJson());
+//       }
+
+//       await batch.commit();
+
+//       log('Houses added successfully!');
+//     } catch (e) {
+//       log('Error adding Houses to Firebase: $e');
+//     }
+//   }
+
+  // Future<bool> getHousesFromFirebase({required String postalCode}) async {
+  //   bool isDataFound = false;
+  //   easyLoading();
+  //   try {
+  //     FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  //     QuerySnapshot querySnapshot = await firestore
+  //         .collection('postalcodes')
+  //         .doc(postalCode)
+  //         .collection(postalCode)
+  //         .get();
+
+  //     if (querySnapshot.docs.isEmpty) {
+  //       log('No houses found for the postalcode: $postalCode in Firebase');
+  //     } else {
+  //       houses.clear();
+  //       houses.addAll(
+  //         querySnapshot.docs
+  //             .map(
+  //               (doc) => House.fromJson(doc.data() as Map<String, dynamic>),
+  //             )
+  //             .toList(),
+  //       );
+  //       log('Got Data From Firebase');
+  //       isDataFound = true;
+  //       EasyLoading.dismiss();
+  //       notifyListeners();
+  //     }
+  //   } catch (e) {
+  //     log('Error retrieving houses: $e');
+  //     EasyLoading.dismiss();
+  //   }
+  //   EasyLoading.dismiss();
+  //   return isDataFound;
+  // }
+
+  Future<void> updateHouseReview(
+    House house,
+    String review,
+  ) async {
+    easyLoading();
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      var reviewerId = FirebaseAuth.instance.currentUser!.uid;
+
+      // Reference the house document within the specified postal code
+      DocumentReference houseDocRef = firestore
+          .collection('postalcodes')
+          .doc(house.postCode)
+          .collection(house.postCode)
+          .doc(house.houseId);
+
+      // Update the fields
+      await houseDocRef.update({
+        'review': review,
+        'reviewerId': reviewerId,
+      });
+      EasyLoading.dismiss();
+
+      log('House review updated successfully!');
+    } catch (e) {
+      EasyLoading.dismiss();
+      log('Error updating house review: $e');
     }
   }
 }

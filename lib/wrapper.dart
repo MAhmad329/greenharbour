@@ -17,7 +17,7 @@ class Wrapper extends StatelessWidget {
       builder: (_, snapshot) {
         final User? user = snapshot.data;
         if (user == null) {
-          return LoginScreen();
+          return const LoginScreen();
         } else {
           return HomeScreen();
         }
