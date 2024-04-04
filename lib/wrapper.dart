@@ -4,6 +4,7 @@ import 'package:green_harbour/screens/home_screen.dart';
 import 'package:green_harbour/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 
+import 'constants.dart';
 import 'models/user_model.dart';
 
 class Wrapper extends StatelessWidget {
@@ -15,11 +16,20 @@ class Wrapper extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: authService.user,
       builder: (_, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(
+                color: primaryGreen,
+              ),
+            ),
+          );
+        }
         final User? user = snapshot.data;
         if (user == null) {
-          return LoginScreen();
+          return const LoginScreen();
         } else {
-          return const HomeScreen();
+          return HomeScreen();
         }
       },
     );

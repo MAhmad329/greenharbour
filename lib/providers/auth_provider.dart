@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
@@ -48,7 +50,7 @@ class AuthServiceProvider with ChangeNotifier {
         return _fetchUserData(firebaseUser);
       }
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
     return null;
   }
@@ -62,7 +64,7 @@ class AuthServiceProvider with ChangeNotifier {
           email: email, password: password);
       return _fetchUserData(credential.user);
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
     return null;
   }
@@ -104,7 +106,7 @@ class AuthServiceProvider with ChangeNotifier {
       // Handle success
     } on auth.FirebaseAuthException catch (e) {
       // Handle errors, e.g., password too weak
-      print(e);
+      log(e.toString());
     }
   }
 
