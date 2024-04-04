@@ -239,7 +239,6 @@ class HouseProvider with ChangeNotifier {
     try {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       String userId = FirebaseAuth.instance.currentUser!.uid;
-      print('userid$userId');
 
       QuerySnapshot querySnapshot = await firestore
           .collection('houses')
