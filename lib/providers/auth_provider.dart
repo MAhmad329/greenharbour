@@ -9,11 +9,21 @@ class AuthServiceProvider with ChangeNotifier {
   final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  auth.User? get emailVerificationUser => _firebaseAuth.currentUser;
   User? _currentUser;
   User? get currentUser => _currentUser;
 
   Stream<User?> get user {
     return _firebaseAuth.authStateChanges().asyncMap(_fetchUserData);
+  }
+
+  Future<void> sendVerificationEmail() async {
+    final user = emailVerificationUser!;
+    await user.sendEmailVerification();
+  }
+
+  Future<void> resetPassword({required String email}) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
   Future<User?> _fetchUserData(auth.User? firebaseUser) async {
@@ -26,7 +36,8 @@ class AuthServiceProvider with ChangeNotifier {
     var userData = snapshot.data();
     String name = userData?['name'] ?? '';
 
-    _currentUser = User(firebaseUser.uid, firebaseUser.email, name, '');
+    _currentUser = User(firebaseUser.uid, firebaseUser.email, name, '',
+        firebaseUser.emailVerified);
 
     return _currentUser;
   }
@@ -40,7 +51,7 @@ class AuthServiceProvider with ChangeNotifier {
       final credential = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       final firebaseUser = credential.user;
-
+      await firebaseUser?.sendEmailVerification();
       if (firebaseUser != null) {
         await _firestore.collection('users').doc(firebaseUser.uid).set({
           'email': firebaseUser.email,
@@ -62,7 +73,12 @@ class AuthServiceProvider with ChangeNotifier {
     try {
       final credential = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      return _fetchUserData(credential.user);
+
+      final firebaseUser = credential.user;
+
+      if (firebaseUser != null) {
+        return _fetchUserData(firebaseUser);
+      }
     } catch (e) {
       log(e.toString());
     }

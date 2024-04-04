@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:green_harbour/providers/auth_provider.dart';
+import 'package:green_harbour/screens/email_verification_screen.dart';
 import 'package:green_harbour/screens/home_screen.dart';
 import 'package:green_harbour/screens/login_screen.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,9 @@ class Wrapper extends StatelessWidget {
         final User? user = snapshot.data;
         if (user == null) {
           return const LoginScreen();
+        } else if (!authService.emailVerificationUser!.emailVerified) {
+          // Access email verification via AuthServiceProvider
+          return const EmailVerificationScreen(); // Navigate to verification screen
         } else {
           return HomeScreen();
         }
