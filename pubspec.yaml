@@ -41,13 +41,9 @@ dependencies:
   flutter_screenutil: ^5.9.0
   flutter_svg: ^2.0.10+1
   google_fonts: ^6.2.1
-<<<<<<< HEAD
-  flutter_easyloading: ^3.0.5
-  shared_preferences: ^2.2.2
-=======
   http: ^1.2.1
   flutter_easyloading: ^3.0.5
->>>>>>> 56e7a292ee9f5ea5b8e3214d69d389b78a0b2232
+
 
 dev_dependencies:
   flutter_test:
