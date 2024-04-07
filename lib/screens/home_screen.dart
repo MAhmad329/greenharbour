@@ -51,7 +51,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         username: Provider.of<AuthServiceProvider>(context)
                             .currentUser!
                             .name!,
-                        onTap: () {}),
+                        onTap: () {
+                          var notifier = Provider.of<AuthServiceProvider>(
+                              context,
+                              listen: false);
+                          notifier.signOut();
+                        }),
                     const SizedBox(
                       height: 15,
                     ),
@@ -156,7 +161,7 @@ class HouseCard extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  '${house.street}, ${house.locality}, ${house.town}, ${house.postCode}',
+                  '${house.houseNumber}, ${house.street}, ${house.locality}, ${house.town}, ${house.postCode}',
                   style: const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
               ),
