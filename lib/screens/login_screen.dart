@@ -9,6 +9,7 @@ import 'package:green_harbour/screens/widgets/button.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/password_visibility_provider.dart';
+import 'email_verification_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -29,7 +30,12 @@ class _LoginScreenState extends State<LoginScreen> {
               emailController.text, passwordController.text);
       if (!mounted) return;
       if (user != null) {
-        Navigator.pushReplacementNamed(context, 'home_screen');
+        if (!user.isVerified) {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (_) => EmailVerificationScreen()));
+        } else {
+          Navigator.pushReplacementNamed(context, 'home_screen');
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
