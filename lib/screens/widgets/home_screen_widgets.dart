@@ -38,8 +38,8 @@ Widget homeHeader(
           ),
         ),
       ),
-      SizedBox(
-        width: 10.w,
+      const SizedBox(
+        width: 10,
       ),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,

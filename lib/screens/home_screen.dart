@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:green_harbour/constants.dart';
 import 'package:green_harbour/models/house_model.dart';
 import 'package:green_harbour/providers/houses_provider.dart';
+import 'package:green_harbour/screens/forms/gmca_form.dart';
 
 import 'package:green_harbour/screens/search_screen.dart';
 
@@ -52,10 +53,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             .currentUser!
                             .name!,
                         onTap: () {
-                          var notifier = Provider.of<AuthServiceProvider>(
+                          Navigator.push(
                               context,
-                              listen: false);
-                          notifier.signOut();
+                              MaterialPageRoute(
+                                  builder: (context) => const GMCAForm()));
+                          // var notifier = Provider.of<AuthServiceProvider>(
+                          //     context,
+                          //     listen: false);
+                          // notifier.signOut();
                         }),
                     const SizedBox(
                       height: 15,
