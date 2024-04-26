@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:green_harbour/constants.dart';
+import 'package:green_harbour/Helpers/helper_functions.dart';
+
 import 'package:green_harbour/screens/widgets/forms_widgets.dart';
 
 class GMCAForm extends StatefulWidget {
@@ -39,7 +40,10 @@ class _GMCAFormState extends State<GMCAForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Evidence Form'),
+        title: const Text(
+          'Evidence Form',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -48,6 +52,7 @@ class _GMCAFormState extends State<GMCAForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                height(8),
                 bulletText(
                     "Suppliers will be expected to be able to provide sufficient evidence for all ECO4 Flex measures to ensure that they meet the eligibility and compliance requirements of the scheme."),
                 height(8),
@@ -70,19 +75,19 @@ class _GMCAFormState extends State<GMCAForm> {
                         height: 62,
                         width: 1.sw,
                         decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                              color: Colors.black.withOpacity(0.8), width: 1),
+                          border:
+                              Border.all(color: Colors.grey.shade300, width: 1),
                         ),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 12),
                             child: Text(
-                              'Select Date',
-                              style: TextStyle(
-                                  color: Colors.black.withOpacity(0.5),
-                                  fontSize: 16),
+                              dateTypeConverter(date: selectedDate.toString()),
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 16),
                             ),
                           ),
                         ),

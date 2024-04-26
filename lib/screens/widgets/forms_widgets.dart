@@ -30,8 +30,11 @@ Widget appTextfield(
         controller: controller,
         cursorColor: primaryGreen,
         decoration: InputDecoration(
-            border: OutlineInputBorder(
+            filled: true,
+            fillColor: Colors.white,
+            enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -40,7 +43,7 @@ Widget appTextfield(
               ),
             ),
             hintText: hintText,
-            hintStyle: TextStyle(color: Colors.grey.shade400)),
+            hintStyle: TextStyle(color: Colors.grey.shade500)),
       )
     ],
   );
