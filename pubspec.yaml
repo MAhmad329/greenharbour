@@ -43,8 +43,9 @@ dependencies:
   google_fonts: ^6.2.1
   http: ^1.2.1
   flutter_easyloading: ^3.0.5
-  uni_links: ^0.5.1
-
+  intl: ^0.19.0
+  pdftron_flutter: ^1.0.1-29
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:

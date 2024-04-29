@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:green_harbour/constants.dart';
 import 'package:green_harbour/models/house_model.dart';
 import 'package:green_harbour/providers/houses_provider.dart';
+import 'package:green_harbour/screens/forms/gmca_form.dart';
 
 import 'package:green_harbour/screens/search_screen.dart';
 
@@ -51,7 +52,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         username: Provider.of<AuthServiceProvider>(context)
                             .currentUser!
                             .name!,
-                        onTap: () {}),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const GMCAForm()));
+                          // var notifier = Provider.of<AuthServiceProvider>(
+                          //     context,
+                          //     listen: false);
+                          // notifier.signOut();
+                        }),
                     const SizedBox(
                       height: 15,
                     ),
@@ -156,7 +166,7 @@ class HouseCard extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  '${house.street}, ${house.locality}, ${house.town}, ${house.postCode}',
+                  '${house.houseNumber}, ${house.street}, ${house.locality}, ${house.town}, ${house.postCode}',
                   style: const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
               ),

@@ -4,10 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:green_harbour/constants.dart';
 import 'package:green_harbour/providers/auth_provider.dart';
 import 'package:green_harbour/providers/email_verification_provider.dart';
 import 'package:green_harbour/providers/houses_provider.dart';
 import 'package:green_harbour/providers/password_visibility_provider.dart';
+import 'package:green_harbour/screens/forms/gmca_form.dart';
+import 'package:green_harbour/screens/forms/nottingham_city_form.dart';
+import 'package:green_harbour/screens/forms/pdf_screen.dart';
 import 'package:green_harbour/screens/home_screen.dart';
 import 'package:green_harbour/screens/login_screen.dart';
 import 'package:green_harbour/screens/signup_screen.dart';
@@ -55,18 +59,23 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           builder: EasyLoading.init(),
+          home: Viewer(),
           theme: ThemeData(
-              textTheme: GoogleFonts.interTextTheme(),
-              appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
-              scaffoldBackgroundColor: Colors.white),
+            primaryColor: primaryGreen,
+            datePickerTheme: const DatePickerThemeData(
+                backgroundColor: Colors.white, surfaceTintColor: primaryGreen),
+            textTheme: GoogleFonts.interTextTheme(),
+            appBarTheme: const AppBarTheme(backgroundColor: primaryGreen),
+            scaffoldBackgroundColor: Colors.teal.withOpacity(0.03),
+          ),
           debugShowCheckedModeBanner: false,
-          initialRoute: '/',
-          routes: {
-            '/': (context) => const Wrapper(),
-            'login_screen': (context) => const LoginScreen(),
-            'home_screen': (context) => HomeScreen(),
-            'signup_screen': (context) => const SignupScreen(),
-          },
+          // initialRoute: '/',
+          // routes: {
+          //   '/': (context) => const Wrapper(),
+          //   'login_screen': (context) => const LoginScreen(),
+          //   'home_screen': (context) => HomeScreen(),
+          //   'signup_screen': (context) => const SignupScreen(),
+          // },
         );
       },
     );
