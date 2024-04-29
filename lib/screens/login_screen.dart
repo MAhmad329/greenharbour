@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_harbour/constants.dart';
 import 'package:green_harbour/providers/auth_provider.dart';
+import 'package:green_harbour/screens/forget_password.dart';
 import 'package:green_harbour/screens/widgets/button.dart';
 import 'package:provider/provider.dart';
 
@@ -161,6 +162,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ForgetPassword(),
+                            ));
+                      },
                       child: const Text(
                         'Forgot Password?',
                         style: TextStyle(

@@ -67,14 +67,14 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 );
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             MyButton(
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (_) => LoginScreen()));
               },
-              buttonColor: primaryGreen,
+              buttonColor: colorGrey,
               buttonWidth: 150.w,
               buttonHeight: 45.h,
               textColor: Colors.white,
