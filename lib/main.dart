@@ -9,6 +9,7 @@ import 'package:green_harbour/providers/auth_provider.dart';
 import 'package:green_harbour/providers/email_verification_provider.dart';
 import 'package:green_harbour/providers/houses_provider.dart';
 import 'package:green_harbour/providers/password_visibility_provider.dart';
+import 'package:green_harbour/screens/forms/nottingham_city_form.dart';
 import 'package:green_harbour/screens/home_screen.dart';
 import 'package:green_harbour/screens/login_screen.dart';
 import 'package:green_harbour/screens/signup_screen.dart';
@@ -66,13 +67,14 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Colors.teal.withOpacity(0.03),
           ),
           debugShowCheckedModeBanner: false,
-          initialRoute: '/',
-          routes: {
-            '/': (context) => const Wrapper(),
-            'login_screen': (context) => const LoginScreen(),
-            'home_screen': (context) => HomeScreen(),
-            'signup_screen': (context) => const SignupScreen(),
-          },
+          home: NottinghamCityForm(),
+          // initialRoute: '/',
+          // routes: {
+          //   '/': (context) => const Wrapper(),
+          //   'login_screen': (context) => const LoginScreen(),
+          //   'home_screen': (context) => HomeScreen(),
+          //   'signup_screen': (context) => const SignupScreen(),
+          // },
         );
       },
     );
