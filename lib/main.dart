@@ -12,6 +12,7 @@ import 'package:green_harbour/providers/password_visibility_provider.dart';
 import 'package:green_harbour/screens/forms/nottingham_city_form.dart';
 import 'package:green_harbour/screens/home_screen.dart';
 import 'package:green_harbour/screens/login_screen.dart';
+import 'package:green_harbour/screens/questions/occupancy_type.dart';
 import 'package:green_harbour/screens/signup_screen.dart';
 import 'package:green_harbour/wrapper.dart';
 import 'package:provider/provider.dart';
@@ -63,11 +64,12 @@ class MyApp extends StatelessWidget {
             datePickerTheme: const DatePickerThemeData(
                 backgroundColor: Colors.white, surfaceTintColor: primaryGreen),
             textTheme: GoogleFonts.interTextTheme(),
-            appBarTheme: const AppBarTheme(backgroundColor: primaryGreen),
+            appBarTheme: const AppBarTheme(
+                backgroundColor: primaryGreen, foregroundColor: Colors.white),
             scaffoldBackgroundColor: Colors.teal.withOpacity(0.03),
           ),
           debugShowCheckedModeBanner: false,
-          home: NottinghamCityForm(),
+          home: OccupancyType(),
           // initialRoute: '/',
           // routes: {
           //   '/': (context) => const Wrapper(),

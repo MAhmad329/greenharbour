@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:green_harbour/models/questions.dart';
 
 const primaryGreen = Color(0xFF1F4343);
 const colorBlack = Color(0xFF01042D);
@@ -36,3 +37,64 @@ void easyLoading() {
     dismissOnTap: true,
   );
 }
+
+const List<Question> questions = [
+  Question(
+      question: 'What is your occupancy type?',
+      options: [
+        'a) Homeowner',
+        'b) Private Tanant',
+        'c) Social Tentant',
+        'd) Other',
+      ],
+      pickedAnswer: ''),
+  Question(
+      question: 'What is your main source of heating?',
+      options: [
+        'a) Gas',
+        'b) Electricity',
+        'c) Oil',
+        'd) Not Sure',
+      ],
+      pickedAnswer: ''),
+  Question(
+      question: 'Has your property got central heating?',
+      options: [
+        'a) Yes',
+        'b) No',
+      ],
+      pickedAnswer: ''),
+  Question(
+      question: 'What type of property do you live in?',
+      options: [
+        'a) Detached House',
+        'b) Semi-Detached House',
+        'c) Terraced House',
+        'd) Flat/Apartment',
+        'E) Bungalow',
+        'F) Other',
+      ],
+      pickedAnswer: ''),
+  Question(
+      question:
+          'Is your boiler older than 15 years If unsure if the boiler qualifies, please visit https://www.homeheatingguide.co.uk/efficiency-tables and check the efficiency rating is below 86%',
+      options: [
+        'a) Detached House',
+        'b) Semi-Detached House',
+        'c) Terraced House',
+        'd) Flat/Apartment',
+        'E) Bungalow',
+        'F) Other',
+      ],
+      pickedAnswer: ''),
+  Question(
+      question:
+          'Does anyone living at the property claim any UK qualified benefits?',
+      descripton:
+          '(This could include Pension Credit, Child benefits, Working Tax Credits, income support etc.)',
+      options: [
+        'a) Yes',
+        'b) No',
+      ],
+      pickedAnswer: ''),
+];
